@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
-import { 
+import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
-  PieChart, Pie, Cell, Legend 
+  PieChart, Pie, Cell, Legend
 } from 'recharts';
 import './App.css';
 
@@ -9,18 +9,18 @@ function App() {
   const [inputValue, setInputValue] = useState('');
   const [categoryValue, setCategoryValue] = useState('Electronics');
   const [dataList, setDataList] = useState([]);
-  const [stats, setStats] = useState({ 
-    count: 0, 
-    total: 0, 
-    average: 0, 
-    max: 0, 
-    min: 0, 
+  const [stats, setStats] = useState({
+    count: 0,
+    total: 0,
+    average: 0,
+    max: 0,
+    min: 0,
     topCategory: 'None',
-    categoryBreakdown: [] 
+    categoryBreakdown: []
   });
   const [error, setError] = useState('');
 
-  const API_URL = 'http://localhost:5000/api/data';
+  const API_URL = 'http://13.60.37.146:5000/api/data';
   const CATEGORIES = ['Electronics', 'Food', 'Clothing', 'Other'];
   const COLORS = ['#3b82f6', '#8b5cf6', '#ec4899', '#10b981', '#f59e0b'];
 
@@ -55,7 +55,7 @@ function App() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
-    
+
     if (!inputValue || isNaN(inputValue)) {
       setError('Please enter a valid numeric value.');
       return;
@@ -65,14 +65,14 @@ function App() {
       const response = await fetch(`${API_URL}/add`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
+        body: JSON.stringify({
           value: Number(inputValue),
           category: categoryValue
         }),
       });
 
       if (!response.ok) throw new Error('Failed to add data');
-      
+
       setInputValue('');
       fetchData();
       fetchStats();
@@ -101,9 +101,9 @@ function App() {
           <form onSubmit={handleSubmit} className="data-form">
             <div className="form-group">
               <label htmlFor="valueInput">Sale Amount ($)</label>
-              <input 
+              <input
                 id="valueInput"
-                type="number" 
+                type="number"
                 step="any"
                 value={inputValue}
                 onChange={(e) => setInputValue(e.target.value)}
@@ -113,9 +113,9 @@ function App() {
             </div>
             <div className="form-group">
               <label htmlFor="categoryInput">Category</label>
-              <select 
-                id="categoryInput" 
-                value={categoryValue} 
+              <select
+                id="categoryInput"
+                value={categoryValue}
                 onChange={(e) => setCategoryValue(e.target.value)}
                 className="category-select"
               >
@@ -153,7 +153,7 @@ function App() {
             </div>
             <div className="stat-card">
               <h3>Top Category</h3>
-              <p className="stat-value" style={{fontSize: '1.8rem'}}>{stats.topCategory}</p>
+              <p className="stat-value" style={{ fontSize: '1.8rem' }}>{stats.topCategory}</p>
             </div>
           </div>
         </section>
@@ -167,7 +167,7 @@ function App() {
                   <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
                   <XAxis dataKey="category" stroke="#94a3b8" />
                   <YAxis stroke="#94a3b8" />
-                  <Tooltip 
+                  <Tooltip
                     contentStyle={{ backgroundColor: 'rgba(15, 23, 42, 0.9)', border: '1px solid #3b82f6', borderRadius: '8px' }}
                     formatter={(value) => formatCurrency(value)}
                   />
@@ -200,7 +200,7 @@ function App() {
                       <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                     ))}
                   </Pie>
-                  <Tooltip 
+                  <Tooltip
                     contentStyle={{ backgroundColor: 'rgba(15, 23, 42, 0.9)', border: '1px solid #8b5cf6', borderRadius: '8px' }}
                     formatter={(value) => formatCurrency(value)}
                   />
@@ -209,7 +209,7 @@ function App() {
               </ResponsiveContainer>
             </div>
           ) : (
-             <p className="empty-state">No chart data available</p>
+            <p className="empty-state">No chart data available</p>
           )}
         </section>
 
@@ -230,7 +230,7 @@ function App() {
                 <tbody>
                   {dataList.map((item) => (
                     <tr key={item._id}>
-                      <td style={{fontWeight: 'bold', color: '#f8fafc'}}>{formatCurrency(item.value)}</td>
+                      <td style={{ fontWeight: 'bold', color: '#f8fafc' }}>{formatCurrency(item.value)}</td>
                       <td>
                         <span className="badge">{item.category}</span>
                       </td>
